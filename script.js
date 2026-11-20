@@ -22,7 +22,6 @@ const niveis = [
   { nome: 'Órbita Instável', gravidade: 2, amplitude: 65, omega: 0.25,  descricao: 'A plataforma se move devagar. Iguale a velocidade horizontal.' },
   { nome: 'Pouso de Precisão', gravidade: 3, amplitude: 90, omega: 0.3, descricao: 'Gravidade alta e plataforma rápida. Exige precisão.' }
 ];
-
 // =====================================================================
 // 3. VARIÁVEIS E ESTADOS DO JOGO
 // =====================================================================
@@ -513,8 +512,6 @@ document.getElementById('estrelas').style.boxShadow = sombrasDasEstrelas.join(',
 function ligarBotao(id, acao) {
   document.getElementById(id).addEventListener('click', acao);
 }
-ligarBotao('botaoJogar', abrirNiveis);
-ligarBotao('botaoInicio', () => mostrarTela('telaInicial'));
 ligarBotao('botaoIniciar', iniciarSelecionado);
 ligarBotao('botaoNiveisJogo', abrirNiveis);
 ligarBotao('botaoReiniciar', () => iniciar(numeroDoNivel));
@@ -524,4 +521,5 @@ ligarBotao('botaoNiveisResultado', abrirNiveis);
 
 nivel = niveis[0];
 iniciar(0);
+abrirNiveis();   // o jogo abre direto na seleção de níveis (sem tela inicial)
 requestAnimationFrame(laco);
