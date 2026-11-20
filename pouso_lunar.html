@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pouso Lunar - Derivadas</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="fundo">
+  <div id="estrelas"></div>
+  <div class="planeta"></div>
+  <div class="lua">
+    <span class="cratera"></span>
+    <span class="cratera"></span>
+    <span class="cratera"></span>
+    <span class="cratera"></span>
+    <span class="cratera"></span>
+  </div>
+</div>
+
+<main class="container">
+
+  <!-- TELA INICIAL -->
+  <section id="telaInicial" class="tela ativa">
+    <div class="centro-inicial">
+      <div class="etiqueta">Projeto de Cálculo Diferencial e Integral I</div>
+      <h1 class="titulo">Pouso Lunar</h1>
+      <p class="subtitulo">Controle o foguete, ajuste sua velocidade e aceleração e tente fazer um pouso seguro na plataforma!</p>
+      <button id="botaoJogar" class="botao primario grande">▶ JOGAR</button>
+    </div>
+    <div class="como-jogar">
+      <div class="vidro"><h3>🎯 Objetivo</h3><p>Pouse o foguete na plataforma, controlando a velocidade e acompanhando o movimento dela.</p></div>
+      <div class="vidro"><h3>🕹️ Controles</h3><p><kbd>↑</kbd> motor · <kbd>←</kbd> <kbd>→</kbd> mover · <kbd>R</kbd> reiniciar</p></div>
+      <div class="vidro"><h3>📐 Matemática</h3><p>Altura, velocidade <b>h'(t)</b> e aceleração <b>v'(t)</b> em tempo real, aplicando derivadas para controlar o voo.</p></div>
+    </div>
+    <div class="integrantes vidro">
+      <div class="etiqueta">Integrantes do grupo</div>
+      <ul>
+        <li>João Víthor Stieven</li>
+        <li>Ricardo Deon</li>
+        <li>Thiago Tassi de Carvalho</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- SELEÇÃO DE NÍVEIS -->
+  <section id="telaNiveis" class="tela">
+    <div class="cabecalho">
+      <div><div class="etiqueta">Central de missões</div><h2>Selecione o nível</h2></div>
+      <button id="botaoInicio" class="botao">← Início</button>
+    </div>
+    <div class="layout-niveis">
+      <div id="listaNiveis"></div>
+      <aside id="detalhes" class="vidro">
+        <div class="etiqueta">Detalhes da missão</div>
+        <h2 id="detalheNome"></h2>
+        <p id="detalheDescricao"></p>
+        <ul class="atributos" id="detalheAtributos"></ul>
+        <button id="botaoIniciar" class="botao primario grande">🚀 INICIAR MISSÃO</button>
+      </aside>
+    </div>
+  </section>
+
+  <!-- TELA DO JOGO -->
+  <section id="telaJogo" class="tela">
+    <div class="cabecalho">
+      <div><div class="etiqueta">Missão em andamento</div><h2 id="tituloNivel"></h2></div>
+      <div>
+        <button id="botaoNiveisJogo" class="botao">← Níveis</button>
+        <button id="botaoReiniciar" class="botao">↻ Reiniciar (R)</button>
+      </div>
+    </div>
+    <div class="hud">
+      <div class="metrica"><small>Altura h(t)</small><strong id="txtAltura"></strong></div>
+      <div class="metrica" id="metricaVelocidade"><small>Velocidade v = h'(t)</small><strong id="txtVelocidade"></strong></div>
+      <div class="metrica"><small>Aceleração a = v'(t)</small><strong id="txtAceleracao"></strong></div>
+      <div class="metrica"><small>Combustível</small><strong id="txtCombustivel"></strong><div class="barra"><div id="barraCombustivel"></div></div></div>
+      <div class="metrica plataforma"><small>Vel. plataforma (fórmula)</small><strong id="txtVelPlataforma"></strong></div>
+      <div class="metrica plataforma" id="metricaRelativa"><small>Vel. relativa (foguete − plataforma)</small><strong id="txtVelRelativa"></strong></div>
+    </div>
+    <canvas id="tela" width="800" height="450"></canvas>
+    <div id="mensagem"></div>
+    <div class="dicas">
+      <span><kbd>↑</kbd> motor</span>
+      <span><kbd>←</kbd> <kbd>→</kbd> mover</span>
+      <span><kbd>R</kbd> reiniciar</span>
+    </div>
+  </section>
+</main>
+
+<!-- RESULTADO -->
+<div id="resultado">
+  <div class="modal vidro">
+    <h2 id="resultadoTitulo"></h2>
+    <p id="resultadoTexto"></p>
+    <div class="acoes">
+      <button id="botaoProximo" class="botao primario">Próximo nível ▶</button>
+      <button id="botaoTentarDeNovo" class="botao">↻ Tentar de novo</button>
+      <button id="botaoNiveisResultado" class="botao">Níveis</button>
+    </div>
+  </div>
+</div>
+
+<script src="script.js" defer></script>
+</body>
+</html>
