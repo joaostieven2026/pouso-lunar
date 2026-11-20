@@ -319,8 +319,8 @@ svg text{fill:var(--suave);font-size:14px;font-family:Segoe UI,Arial,sans-serif}
     <div class="fn f1"><br>
       <div class="tit"><h3>Onde ela está?</h3></div><br>
       <div class="eq">x(t) = <span class="kc">C</span> + <span class="ka">A</span> · sen(<span class="kw">ω</span>t)</div>
-<pre><span class="n">72</span>function posicaoPlataforma(t) {
-<span class="n">73</span>  return <span class="kc">CENTRO_PLATAFORMA</span>
+<pre><span class="n">51</span>function posicaoPlataforma(t) {
+<span class="n">52</span>  return <span class="kc">CENTRO_PLATAFORMA</span>
 <span class="n"></span>    + <span class="ka">nivel.amplitude</span>
 <span class="n"></span>    * Math.sin(<span class="kw">nivel.omega</span> * t);</pre><br>
       <ul>
@@ -331,8 +331,8 @@ svg text{fill:var(--suave);font-size:14px;font-family:Segoe UI,Arial,sans-serif}
     <div class="fn f2"><br>
       <div class="tit"><h3>Com que velocidade?</h3></div><br>
       <div class="eq lar">x′(t) = <span class="ka">A</span> · <span class="kw">ω</span> · cos(<span class="kw">ω</span>t)</div>
-<pre><span class="n">84</span>function velocidadePlataforma(t) {
-<span class="n">85</span>  return <span class="ka">nivel.amplitude</span>
+<pre><span class="n">56</span>function velocidadePlataforma(t) {
+<span class="n">57</span>  return <span class="ka">nivel.amplitude</span>
 <span class="n"></span>    * <span class="kw">nivel.omega</span>
 <span class="n"></span>    * Math.cos(<span class="kw">nivel.omega</span> * t);</pre>
       <ul>
@@ -350,8 +350,8 @@ svg text{fill:var(--suave);font-size:14px;font-family:Segoe UI,Arial,sans-serif}
     <div class="fn f1"><br>
       <div class="tit"><h3>Aceleração vertical</h3></div><br>
       <div class="eq">a = <span class="ka">(F</span> / <span class="kw">m)</span> − <span class="kc">g</span></div>
-<pre><span class="n">198</span>const <span class="kw">massa</span> = 1 + combustivel / 100;
-<span class="n">199</span>aceleracao = <span class="ka">empuxo</span> / <span class="kw">massa</span>
+<pre><span class="n">155</span>const <span class="kw">massa</span> = 1 + combustivel / 100;
+<span class="n">156</span>aceleracao = <span class="ka">empuxo</span> / <span class="kw">massa</span>
 <span class="n"></span>  - <span class="kc">nivel.gravidade</span>;</pre>
       <ul>
         <li>O motor empurra para cima (<b class="ka">F = 8</b>) e a gravidade puxa para baixo (<b class="kc">g</b>).</li>
@@ -360,9 +360,9 @@ svg text{fill:var(--suave);font-size:14px;font-family:Segoe UI,Arial,sans-serif}
     <div class="esp"></div>
     <div class="fn f2"><br>
       <div class="tit"><h3>Aceleração lateral</h3></div><br>
-<pre><span class="n">203</span>if (teclas.esquerda)
+<pre><span class="n">160</span>if (teclas.esquerda)
 <span class="n"></span>  aceleracaoX = -ACELERACAO_LATERAL;</pre>
-<pre><span class="n">203</span>if (teclas.direita)
+<pre><span class="n">161</span>if (teclas.direita)
 <span class="n"></span>  aceleracaoX = ACELERACAO_LATERAL;</pre>
       <ul><li>← aplica <b>−12 m/s²</b>;</li></ul>
       <ul><li>→ aplica <b>+12 m/s²</b>;</li></ul>
@@ -385,49 +385,49 @@ svg text{fill:var(--suave);font-size:14px;font-family:Segoe UI,Arial,sans-serif}
     <div class="fn f1">
       <div class="tit"><h3>Aceleração → velocidade</h3></div>
       <div class="eq" style="font-size:28px">v(t + dt) ≈ v(t) + <span class="ka">a</span> · dt</div>
-<pre><span class="n">216</span>velocidade += aceleracao * dt;
-<span class="n">218</span>velocidadeX += aceleracaoX * dt;</pre>
+<pre><span class="n">164</span>velocidade += aceleracao * dt;
+<span class="n">166</span>velocidadeX += aceleracaoX * dt;</pre>
       <ul><li>Como <b>a = v′</b>, a velocidade ganha <b>a&nbsp;·&nbsp;dt</b> por quadro.</li></ul>
     </div>
     <div class="lig">depois<span>→</span></div>
     <div class="fn f2">
       <div class="tit"><h3>Velocidade → posição</h3></div>
       <div class="eq lar" style="font-size:28px">h(t + dt) ≈ h(t) + <span class="kw">v</span> · dt</div>
-<pre><span class="n">217</span>altura += velocidade * dt;
-<span class="n">219</span>posicaoX += velocidadeX * dt;</pre>
+<pre><span class="n">165</span>altura += velocidade * dt;
+<span class="n">167</span>posicaoX += velocidadeX * dt;</pre>
       <ul><li>Como <b>v = h′</b>, a altura ganha <b>v&nbsp;·&nbsp;dt</b> por quadro.</li></ul>
     </div>
   </div>
   <div class="reg" style="--cor:var(--verde);margin-top:14px">
-<pre><span class="n">222</span>if (altura &lt;= 0) {
-<span class="n">223</span>  altura = 0;
-<span class="n">224</span>  terminou = true;
-<span class="n">225</span>  verificarPouso();</pre>
+<pre><span class="n">170</span>if (altura &lt;= 0) {
+<span class="n">171</span>  altura = 0;
+<span class="n">172</span>  terminou = true;
+<span class="n">173</span>  verificarPouso();</pre>
     <div><h3>Tocou o chão?</h3><p>Trava a altura em 0, para o jogo e confere se o pouso foi seguro (próximo slide).</p></div>
   </div>
 </section>
 
-<!-- 9. CÓDIGO D -->
+<!--4Codigo-->
 <section class="slide">
   <h2>Código 4: o pouso vale?</h2>
   <p class="sub" style="margin-bottom:14px">verificarPouso(): três condições, e todas precisam ser verdadeiras.</p>
   <div class="regs">
     <div class="reg" style="--cor:var(--ciano)">
-<pre><span class="n">235</span>const <span class="kc">naPlataforma</span> = Math.abs(
+<pre><span class="n">180</span>const <span class="kc">naPlataforma</span> = Math.abs(
 <span class="n"></span>  posicaoX - posicaoPlataforma(tempo))
 <span class="n"></span>  &lt; LARGURA_PLATAFORMA / 2;</pre>
       <div><h3>Está em cima da plataforma?</h3><p>A distância até o centro da plataforma precisa ser menor que <b>70</b> (metade da largura, 140).</p></div>
     </div>
     <div class="reg" style="--cor:var(--laranja)">
-<pre><span class="n">236</span>const <span class="ka">descidaSuave</span> =
+<pre><span class="n">181</span>const <span class="ka">descidaSuave</span> =
 <span class="n"></span>  Math.abs(velocidade)
 <span class="n"></span>  &lt;= VELOCIDADE_MAXIMA_PARA_POUSAR;</pre>
       <div><h3>Desce devagar?</h3><p>A velocidade vertical, em módulo, não passa de <b>6,5 m/s</b>.</p></div>
     </div>
     <div class="reg" style="--cor:var(--verde)">
-<pre><span class="n">234</span>const velocidadeRelativa =
+<pre><span class="n">179</span>const velocidadeRelativa =
 <span class="n"></span>  velocidadeX - velocidadePlataforma(tempo);
-<span class="n">237</span>const <span class="kw">velocidadesIguais</span> =
+<span class="n">182</span>const <span class="kw">velocidadesIguais</span> =
 <span class="n"></span>  Math.abs(velocidadeRelativa)
 <span class="n"></span>  &lt;= DIFERENCA_MAXIMA_ENTRE_VELOCIDADES_X;</pre>
       <div><h3>Mesma velocidade lateral?</h3><p>Foguete menos <b>x′(t)</b>: perto de 0, os dois andam juntos. Ex.: +14 − 16,25 = −2,25, dentro do limite de <b>7</b>.</p></div>
@@ -466,29 +466,7 @@ addEventListener('keydown', e => {
 });
 addEventListener('resize', ajustar);
 
-// Gráficos do slide 4: x(t) e x'(t) do nível 2 (mesmas fórmulas do jogo)
-const A = 65, W = 0.25, C = 450, T = 2 * Math.PI / W;
-function grafico(id, f, min, max, cor, rotulo) {
-  const L = 540, H = 190, m = 24;
-  let d = '';
-  for (let i = 0; i <= 200; i++) {
-    const t = i / 200 * T;
-    const y = H - m - (f(t) - min) / (max - min) * (H - 2 * m);
-    d += (i ? 'L' : 'M') + (i / 200 * L).toFixed(1) + ' ' + y.toFixed(1);
-  }
-  const zero = H - m - (-min) / (max - min) * (H - 2 * m);
-  let marcas = '';
-  [T / 4, 3 * T / 4].forEach(t => {
-    const x = t / T * L;
-    marcas += '<line x1="' + x + '" x2="' + x + '" y1="6" y2="' + (H - 6) + '" stroke="#ffb454" stroke-dasharray="4 4" opacity=".6"/>';
-  });
-  document.getElementById(id).innerHTML =
-    '<line x1="0" x2="' + L + '" y1="' + zero + '" y2="' + zero + '" stroke="#2a3f5e"/>' + marcas +
-    '<path d="' + d + '" fill="none" stroke="' + cor + '" stroke-width="3"/>' +
-    '<text x="6" y="16">' + rotulo + '</text>';
-}
 
-// Estrelas da capa (posições fixas, geradas por fórmula)
 document.getElementById('capaEstrelas').style.boxShadow = Array.from({ length: 110 }, (_, i) =>
   ((i * 197) % 1280) + 'px ' + ((i * 89) % 600) + 'px 0 ' + (i % 6 === 0 ? 1 : 0) + 'px rgba(255,255,255,' + (0.3 + (i % 7) * 0.09).toFixed(2) + ')').join(',');
 
