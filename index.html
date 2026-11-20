@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pouso Lunar – Slides do Seminário</title>
+<style>
+:root{--fundo:#0a1424;--painel:#13223a;--linha:#2a3f5e;--texto:#eaf2fb;--suave:#9db2c9;--ciano:#58e6ff;--laranja:#ffb454;--verde:#6cf2a5;--rosa:#ff647c}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%;overflow:hidden;background:#060d19;color:var(--texto);font-family:"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+#palco{position:absolute;left:50%;top:50%;width:1280px;height:720px;transform-origin:center;background:radial-gradient(ellipse at 85% 0%,#17315a 0%,var(--fundo) 60%);overflow:hidden}
+.slide{display:none;position:absolute;inset:0;padding:56px 72px 64px}
+.slide.ativo{display:flex;flex-direction:column}
+h1{font-family:Georgia,"Times New Roman",serif;font-size:86px;font-weight:700;letter-spacing:-1px}
+h2{font-family:Georgia,"Times New Roman",serif;font-size:42px;font-weight:700;margin-bottom:6px}
+.sub{color:var(--suave);font-size:22px;margin-bottom:26px}
+.cols{display:flex;gap:36px;flex:1;min-height:0}
+.col{flex:1;min-width:0}
+.cartao{background:var(--painel);border:1px solid var(--linha);border-radius:14px;padding:20px 24px}
+.cartao h3{font-size:24px;margin-bottom:8px;color:var(--ciano)}
+.cartao p,.cartao li{font-size:21px;line-height:1.45;color:var(--texto)}
+.cartao ul{padding-left:22px}
+.eq{font-family:Cambria,"Cambria Math",Georgia,serif;font-style:italic;font-size:34px;background:#0d1b30;border-left:5px solid var(--ciano);border-radius:8px;padding:12px 20px;margin:12px 0}
+.eq.lar{border-color:var(--laranja)}.eq.ver{border-color:var(--verde)}
+.eq small{font-size:20px;font-style:normal;color:var(--suave);margin-left:10px}
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.15;margin:0 4px}
+.frac>span:first-child{border-bottom:2px solid currentColor;padding:0 6px}
+.nota{font-size:20px;color:var(--suave);line-height:1.45}
+.c-ciano{color:var(--ciano)}.c-lar{color:var(--laranja)}.c-ver{color:var(--verde)}
+.grade{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px}
+.chip{background:var(--painel);border:1px solid var(--linha);border-radius:12px;padding:16px 20px}
+.chip b{display:block;font-family:Cambria,Georgia,serif;font-style:italic;font-size:30px;margin-bottom:4px}
+.chip span{font-size:19px;color:var(--suave)}
+.fluxo{display:flex;align-items:center;gap:12px;margin:14px 0}
+.fluxo .cx{font-family:Cambria,Georgia,serif;font-style:italic;font-size:30px;background:var(--painel);border:2px solid var(--ciano);border-radius:10px;padding:10px 22px}
+.fluxo .sp{font-size:20px;color:var(--laranja);text-align:center;line-height:1.2}
+pre{background:#07101e;border:1px solid var(--linha);border-radius:10px;padding:14px 20px;font:19px/1.5 Consolas,"Courier New",monospace;color:#d7e6f5;margin-bottom:14px;white-space:pre}
+pre .c{color:#7d93ab}pre .m{color:var(--verde)}
+pre i{font-style:normal;color:var(--suave);float:right;margin-left:24px}
+table{border-collapse:collapse;width:100%;font-size:20px}
+th,td{padding:8px 12px;text-align:center;border-bottom:1px solid var(--linha)}
+th{color:var(--ciano);font-weight:600}
+.rodape{position:absolute;left:72px;right:72px;bottom:20px;display:flex;justify-content:space-between;font-size:16px;color:var(--suave)}
+svg text{fill:var(--suave);font-size:14px;font-family:Segoe UI,Arial,sans-serif}
+#nav{position:fixed;right:16px;bottom:12px;display:flex;gap:8px;z-index:9}
+#nav button{background:var(--painel);color:var(--texto);border:1px solid var(--linha);border-radius:8px;padding:6px 14px;font-size:16px;cursor:pointer}
+#nav button:focus-visible,.jogar:focus-visible,#nav a:focus-visible{outline:2px solid var(--ciano)}
+.jogar,#nav a{display:inline-block;text-decoration:none;font-weight:700;color:#04121f;background:linear-gradient(135deg,#7ff0ff,#2cc4e8);border-radius:10px}
+.jogar{font-size:26px;padding:14px 34px;margin-top:22px;align-self:flex-start}
+#nav a{padding:6px 14px;font-size:16px}
+.cod{width:100%;border-collapse:collapse;margin-top:4px}
+.cod td{padding:5px 12px;border-bottom:1px solid var(--linha);vertical-align:top;font-size:19px;line-height:1.35;text-align:left}
+.cod td:first-child{width:47%;font:16px/1.35 Consolas,"Courier New",monospace;color:var(--verde);white-space:pre-wrap;background:#07101e}
+.cod td:first-child b{color:var(--suave);font-weight:400;margin-right:10px}
+.cod td span{color:var(--laranja)}
+.dica{font-size:19px;color:var(--suave);margin-top:10px}
+</style>
+</head>
+<body>
+<div id="palco">
+
+<!-- 1. CAPA -->
+<section class="slide ativo" style="justify-content:center">
+  <div class="sub" style="margin-bottom:10px">Cálculo Diferencial e Integral I · Prof. Dr. Denílson José Seidel · BCC</div>
+  <h1>Pouso Lunar</h1>
+  <p style="font-size:32px;margin:14px 0 40px;color:var(--ciano)">Derivadas como motor de um jogo: velocidade, aceleração e taxa de variação</p>
+  <a class="jogar" href="pouso_lunar.html" target="_blank" rel="noopener" style="margin:0 0 24px">🚀 Abrir o jogo</a>
+  <div class="cartao" style="align-self:flex-start"><h3>Integrantes</h3><p>João Víthor Stieven<br>Ricardo Deon<br>Thiago Tassi de Carvalho</p></div>
+</section>
+
+<!-- 2. IDEIA -->
+<section class="slide">
+  <h2>A ideia do jogo</h2>
+  <p class="sub">É como pousar um helicóptero num navio que balança: você precisa se mover junto com ele.</p>
+  <div class="cols">
+    <div class="col"><div class="cartao" style="height:100%">
+      <h3>Controles</h3>
+      <ul><li><b>↑</b> liga o motor (gasta combustível)</li><li><b>← →</b> movem para os lados</li><li><b>R</b> recomeça</li></ul>
+      <h3 style="margin-top:22px">3 níveis</h3>
+      <p>1: plataforma parada. 2: ela se mexe devagar. 3: gravidade maior e plataforma mais rápida.</p>
+    </div></div>
+    <div class="col"><div class="cartao" style="height:100%">
+      <h3>Para pousar, as 3 regras juntas</h3>
+      <ul style="line-height:1.9"><li>Estar <b>em cima</b> da plataforma</li><li>Chegar <b>devagar</b> (até 6,5 m/s)</li><li>Andar <b>na mesma velocidade lateral</b> que ela</li></ul>
+      <p class="nota" style="margin-top:12px">A 3ª regra usa uma <b class="c-lar">derivada</b>: a velocidade da plataforma.</p>
+    </div></div>
+  </div>
+</section>
+
+<!-- 3. DEMONSTRAÇÃO -->
+<section class="slide">
+  <h2>Demonstração ao vivo</h2>
+  <p class="sub">O painel do jogo mostra os números mudando em tempo real.</p>
+  <div class="grade">
+    <div class="chip"><b class="c-ciano">h(t)</b><span>Altura: onde o foguete está</span></div>
+    <div class="chip"><b class="c-ver">v = h′(t)</b><span>Velocidade: quantos metros a altura muda por segundo</span></div>
+    <div class="chip"><b class="c-ver">a = v′(t)</b><span>Aceleração: quanto a velocidade muda por segundo</span></div>
+    <div class="chip"><b class="c-lar">x′(t)</b><span>Velocidade lateral da plataforma</span></div>
+    <div class="chip"><b class="c-lar">v<sub>x</sub> − x′(t)</b><span>Diferença entre o foguete e a plataforma. Perto de 0 é bom</span></div>
+    <div class="chip"><b>Combustível</b><span>Quanto menos, mais leve o foguete</span></div>
+  </div>
+  <a class="jogar" href="pouso_lunar.html" target="_blank" rel="noopener">🚀 Abrir o jogo (nova aba)</a>
+  <p class="dica"><b class="c-lar">Seta laranja:</b> velocidade da plataforma. <b class="c-ver">Seta verde:</b> velocidade do foguete. Quanto maior a seta, mais rápido.</p>
+</section>
+
+<!-- 4. O QUE É DERIVADA -->
+<section class="slide">
+  <h2>O que é uma derivada?</h2>
+  <p class="sub">É “quanto algo muda por segundo”. Exemplo: o velocímetro do carro.</p>
+  <div class="cols">
+    <div class="col">
+      <div class="cartao"><p>Um carro anda 100 km em 2 h. Média: 50 km/h. Para saber a velocidade <b>neste instante</b>, olhamos um intervalo cada vez menor:</p></div>
+      <div class="eq ver">v = h′(t) = lim<sub>Δt→0</sub> <span class="frac"><span>Δh</span><span>Δt</span></span></div>
+      <p class="nota">Δh = quanto a posição mudou. Δt = quanto tempo passou.</p>
+    </div>
+    <div class="col">
+      <div class="cartao"><h3>A cadeia do movimento</h3>
+        <div class="fluxo" style="flex-wrap:wrap"><div class="cx">h(t)</div><div class="sp">derivar<br>→</div><div class="cx">v(t)</div><div class="sp">derivar<br>→</div><div class="cx">a(t)</div></div>
+        <p class="nota" style="color:var(--texto)">posição → velocidade → aceleração</p>
+        <p class="nota" style="margin-top:12px">No código fazemos o <b>caminho de volta</b>: a cada quadro (1/60 s) somamos um pedacinho: Δh ≈ v · Δt.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5. PLATAFORMA -->
+<section class="slide">
+  <h2>A plataforma vai e volta como um balanço</h2>
+  <p class="sub">A posição segue um seno. A derivada dá a velocidade.</p>
+  <div class="cols">
+    <div class="col">
+      <div class="eq">x(t) = C + A · sen(ω t)</div>
+      <p class="nota">C = centro (450). A = o quanto se afasta. ω = quão rápido vai e volta.</p>
+      <div class="eq lar">x′(t) = A · ω · cos(ω t)</div>
+      <p class="nota" style="color:var(--texto)">Regra da cadeia: o ω de dentro do seno “sai” multiplicando, e a derivada do seno é o cosseno.</p>
+      <p class="nota" style="margin-top:10px"><b class="c-lar">No centro</b> ela é mais rápida. <b class="c-lar">Nos extremos</b> para um instante (x′ = 0), o melhor momento para pousar.</p>
+      <p class="nota" style="margin-top:10px">Nível 2: A·ω = 65 · 0,25 = <b>16,25 m/s</b> de velocidade máxima.</p>
+    </div>
+    <div class="col"><div class="cartao">
+      <svg id="g1" viewBox="0 0 540 190" width="100%"></svg>
+      <svg id="g2" viewBox="0 0 540 190" width="100%"></svg>
+    </div></div>
+  </div>
+</section>
+
+<!-- 6. CÓDIGO A -->
+<section class="slide">
+  <h2>Código 1: a plataforma (script.js)</h2>
+  <p class="sub">Duas funções: onde ela está e com que velocidade se move.</p>
+  <table class="cod">
+<tr><td><b>73</b>function posicaoPlataforma(t) {</td><td>Cria uma função que responde: <span>onde</span> a plataforma está no instante <b>t</b> (em segundos)?</td></tr><tr><td><b>74</b>return CENTRO_PLATAFORMA
+  + nivel.amplitude
+  * Math.sin(nivel.omega * t);</td><td>Começa no centro (450) e soma <b>A · sen(ωt)</b>. O seno vai de −1 a +1, então ela oscila entre 450−A e 450+A.</td></tr><tr><td><b>85</b>function velocidadePlataforma(t) {</td><td>Responde: <span>com que velocidade</span> ela se move agora? Esta é a <span>derivada x′(t)</span>.</td></tr><tr><td><b>86</b>return nivel.amplitude
+  * nivel.omega
+  * Math.cos(nivel.omega * t);</td><td><b>A · ω</b> é a velocidade máxima (o ω saiu do seno pela regra da cadeia). <b>cos(ωt)</b> vale 1 no centro e 0 nos extremos.</td></tr></table>
+  <p class="dica">Usadas na plataforma desenhada, na seta laranja, no painel e na regra de pouso.</p>
+</section>
+
+<!-- 7. CÓDIGO B -->
+<section class="slide">
+  <h2>Código 2: aceleração do foguete</h2>
+  <p class="sub">Trecho da função atualizar(), que roda a cada quadro.</p>
+  <table class="cod">
+<tr><td><b>472</b>const dt = Math.min(
+  (agora - tempoAnterior)/1000, 0.05);</td><td><b>dt</b> é o tempo desde o quadro anterior (cerca de 0,016 s). O limite 0,05 evita saltos se o navegador travar.</td></tr><tr><td><b>199</b>const massa = 1 + combustivel / 100;</td><td>Quanto mais combustível, mais pesado: a massa vai de <b>2</b> (tanque cheio) a <b>1</b> (vazio).</td></tr><tr><td><b>200</b>aceleracao = empuxo / massa
+  - nivel.gravidade;</td><td><span>a = F/m − g</span>. O motor empurra para cima e a gravidade puxa para baixo. Como a massa muda, a aceleração <b>não é constante</b>.</td></tr><tr><td><b>204</b>if (teclas.esquerda)
+  aceleracaoX = -ACELERACAO_LATERAL;</td><td>Seta ← aplica aceleração de −12 m/s² para a esquerda. Com → é +12, e sem tecla é 0.</td></tr></table>
+  <p class="dica">Exemplo (nível 1): com o tanque cheio, a = 8/2 − 1,5 = <b>+2,5</b>. Quase vazio, a = 8/1 − 1,5 = <b>+6,5</b>.</p>
+</section>
+
+<!-- 8. CÓDIGO C -->
+<section class="slide">
+  <h2>Código 3: da aceleração à posição</h2>
+  <p class="sub">Aqui a derivada é usada “de trás para frente”.</p>
+  <table class="cod">
+<tr><td><b>217</b>velocidade += aceleracao * dt;</td><td>Como <b>a = v′</b>, a velocidade ganha <b>a · dt</b> a cada quadro. É a velocidade nova = velocidade antiga + variação.</td></tr><tr><td><b>218</b>altura += velocidade * dt;</td><td>Como <b>v = h′</b>, a altura muda <b>v · dt</b>. Velocidade negativa faz o foguete descer.</td></tr><tr><td><b>219</b>velocidadeX += aceleracaoX * dt;</td><td>Mesma ideia na horizontal: a aceleração lateral muda a velocidade lateral.</td></tr><tr><td><b>220</b>posicaoX += velocidadeX * dt;</td><td>A velocidade lateral muda a posição lateral.</td></tr><tr><td><b>223</b>if (altura <= 0) {
+  altura = 0; terminou = true;
+  verificarPouso();</td><td>Tocou o chão? Trava a altura em 0, para o jogo e confere se o pouso foi seguro.</td></tr></table>
+  <p class="dica">Esse método se chama <b>Euler</b>: repete pequenos passos Δt, e o erro de cada passo é minúsculo.</p>
+</section>
+
+<!-- 9. CÓDIGO D -->
+<section class="slide">
+  <h2>Código 4: o pouso vale?</h2>
+  <p class="sub">Função verificarPouso(): usa a derivada da plataforma.</p>
+  <table class="cod">
+<tr><td><b>235</b>const velocidadeRelativa =
+  velocidadeX
+  - velocidadePlataforma(tempo);</td><td>Velocidade lateral do foguete menos <span>x′(t)</span>. Se for 0, os dois andam juntos, como dois carros na mesma velocidade.</td></tr><tr><td><b>236</b>const naPlataforma = Math.abs(
+  posicaoX - posicaoPlataforma(tempo))
+  < LARGURA_PLATAFORMA / 2;</td><td>Distância entre o foguete e o centro da plataforma menor que 70 (metade da largura 140).</td></tr><tr><td><b>237</b>const descidaSuave =
+  Math.abs(velocidade) <= 6.5;</td><td>A velocidade vertical é pequena o bastante? (constante VELOCIDADE_MAXIMA_PARA_POUSAR)</td></tr><tr><td><b>238</b>const velocidadesIguais =
+  Math.abs(velocidadeRelativa) <= 7;</td><td>A diferença de velocidade lateral é pequena? (constante DIFERENCA_MAXIMA_ENTRE_VELOCIDADES_X)</td></tr><tr><td><b>240</b>if (naPlataforma && descidaSuave
+    && velocidadesIguais)</td><td>As <b>três juntas</b> (&amp;&amp; = “e”) significam pouso perfeito. Qualquer uma falha e o foguete explode.</td></tr></table>
+  <p class="dica">Exemplo (nível 2, t = 0): plataforma a +16,25 m/s e foguete a +14 → v<sub>rel</sub> = −2,25, dentro do limite.</p>
+</section>
+
+<div class="rodape"><span>Pouso Lunar · Cálculo Diferencial e Integral I</span><span id="num"></span></div>
+</div>
+
+<div id="nav"><a href="pouso_lunar.html" target="_blank" rel="noopener">🚀 Jogo</a><button id="ant" aria-label="Slide anterior">◀</button><button id="prox" aria-label="Próximo slide">▶</button></div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const palco = document.getElementById('palco');
+let atual = 0;
+
+function mostrar(i) {
+  atual = Math.max(0, Math.min(slides.length - 1, i));
+  slides.forEach((s, k) => s.classList.toggle('ativo', k === atual));
+  document.getElementById('num').textContent = (atual + 1) + ' / ' + slides.length;
+  location.hash = atual + 1;
+}
+function ajustar() {
+  const escala = Math.min(innerWidth / 1280, innerHeight / 720);
+  palco.style.transform = 'translate(-50%,-50%) scale(' + escala + ')';
+}
+document.getElementById('ant').onclick = () => mostrar(atual - 1);
+document.getElementById('prox').onclick = () => mostrar(atual + 1);
+addEventListener('keydown', e => {
+  if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); mostrar(atual + 1); }
+  if (['ArrowLeft', 'PageUp'].includes(e.key)) mostrar(atual - 1);
+  if (e.key === 'Home') mostrar(0);
+  if (e.key === 'End') mostrar(slides.length - 1);
+});
+addEventListener('resize', ajustar);
+
+// Gráficos do slide 4: x(t) e x'(t) do nível 2 (mesmas fórmulas do jogo)
+const A = 65, W = 0.25, C = 450, T = 2 * Math.PI / W;
+function grafico(id, f, min, max, cor, rotulo) {
+  const L = 540, H = 190, m = 24;
+  let d = '';
+  for (let i = 0; i <= 200; i++) {
+    const t = i / 200 * T;
+    const y = H - m - (f(t) - min) / (max - min) * (H - 2 * m);
+    d += (i ? 'L' : 'M') + (i / 200 * L).toFixed(1) + ' ' + y.toFixed(1);
+  }
+  const zero = H - m - (-min) / (max - min) * (H - 2 * m);
+  let marcas = '';
+  [T / 4, 3 * T / 4].forEach(t => {
+    const x = t / T * L;
+    marcas += '<line x1="' + x + '" x2="' + x + '" y1="6" y2="' + (H - 6) + '" stroke="#ffb454" stroke-dasharray="4 4" opacity=".6"/>';
+  });
+  document.getElementById(id).innerHTML =
+    '<line x1="0" x2="' + L + '" y1="' + zero + '" y2="' + zero + '" stroke="#2a3f5e"/>' + marcas +
+    '<path d="' + d + '" fill="none" stroke="' + cor + '" stroke-width="3"/>' +
+    '<text x="6" y="16">' + rotulo + '</text>';
+}
+grafico('g1', t => A * Math.sin(W * t), -A * 1.1, A * 1.1, '#58e6ff', 'x(t) − 450 (extremos onde x′ = 0)');
+grafico('g2', t => A * W * Math.cos(W * t), -A * W * 1.1, A * W * 1.1, '#ffb454', 'x′(t) (cruza o zero nos extremos)');
+
+ajustar();
+mostrar((parseInt(location.hash.slice(1)) || 1) - 1);
+</script>
+</body>
+</html>
