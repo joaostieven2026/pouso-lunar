@@ -1,6 +1,4 @@
-// =====================================================================
-// 1. CONFIGURAÇÕES E CONSTANTES DO JOGO (mude os números aqui)
-// =====================================================================
+//CONFIGURAÇÕES E CONSTANTES DO JOGO (mude os números aqui)
 const LARGURA = 800;
 const ALTURA_DA_TELA = 450;
 const Y_DO_CHAO = 400;
@@ -13,81 +11,53 @@ const VELOCIDADE_MAXIMA_PARA_POUSAR = 6.5;
 const DIFERENCA_MAXIMA_ENTRE_VELOCIDADES_X = 7;
 const DESBLOQUEAR_TUDO = false;
 
-// =====================================================================
-// 2. CONFIGURAÇÃO DOS NÍVEIS
-// Cada nível: gravidade, amplitude A e frequência ômega da plataforma
-// =====================================================================
+//CONFIGURAÇÃO DOS NÍVEIS
 const niveis = [
   { nome: 'Missão de Treinamento', gravidade: 1.5, amplitude: 0,  omega: 0,    descricao: 'Plataforma parada. Treine a descida suave.' },
   { nome: 'Órbita Instável', gravidade: 2, amplitude: 65, omega: 0.25,  descricao: 'A plataforma se move devagar. Iguale a velocidade horizontal.' },
   { nome: 'Pouso de Precisão', gravidade: 3, amplitude: 90, omega: 0.3, descricao: 'Gravidade alta e plataforma rápida. Exige precisão.' }
 ];
-// =====================================================================
-// 3. VARIÁVEIS E ESTADOS DO JOGO
-// =====================================================================
+
 const tela = document.getElementById('tela');
 const pincel = tela.getContext('2d');
 const mensagem = document.getElementById('mensagem');
 
 let numeroDoNivel = 0;
-let nivel;                           // objeto do nível atual
+let nivel;                   
 let tempo = 0, terminou = false;
-let posicaoX, velocidadeX;           // movimento horizontal
-let altura, velocidade, aceleracao;  // movimento vertical
+let posicaoX, velocidadeX;         
+let altura, velocidade, aceleracao;
 let combustivel, motorLigado;
-let emJogo = false;                  // true quando a tela do jogo está aberta
+let emJogo = false;  
 let temporizadorResultado;
 const teclas = { cima: false, esquerda: false, direita: false };
 
-// =====================================================================
-// 4. SISTEMA DE PROGRESSO (níveis concluídos)
-// =====================================================================
+//SISTEMA DE PROGRESSO (níveis concluídos)
 const CHAVE_PROGRESSO = 'pousoLunar_concluidos';
-
 function carregarProgresso() {
   try { return JSON.parse(localStorage.getItem(CHAVE_PROGRESSO)) || []; } catch (erro) { return []; }
 }
-
 function salvarProgresso() {
   try { localStorage.setItem(CHAVE_PROGRESSO, JSON.stringify(concluidos)); } catch (erro) { /* sem armazenamento */ }
 }
-
 let concluidos = carregarProgresso();
-
-// O nível 1 sempre está liberado; os demais exigem o anterior concluído
 function nivelLiberado(i) {
   return DESBLOQUEAR_TUDO || i === 0 || concluidos[i - 1] === true;
 }
 
-// =====================================================================
-// 5. MATEMÁTICA DA PLATAFORMA (CÁLCULO DIFERENCIAL)
-// =====================================================================
+//MATEMÁTICA DA PLATAFORMA (CÁLCULO DIFERENCIAL)
 
-// ==========================================
-// MATEMÁTICA: FUNÇÃO DA POSIÇÃO DA PLATAFORMA
-// ==========================================
-// x(t) = centro + A · sen(ω · t)
-// Dá a posição horizontal da plataforma em função do tempo t.
-// É usada para DESENHAR a plataforma e para verificar se o foguete pousou nela.
+//POSIÇÃO DA PLATAFORMA
 function posicaoPlataforma(t) {
   return CENTRO_PLATAFORMA + nivel.amplitude * Math.sin(nivel.omega * t);
 }
 
-// ==========================================
-// MATEMÁTICA: PRIMEIRA DERIVADA - VELOCIDADE
-// ==========================================
-// v(t) = x'(t) = A · ω · cos(ω · t)
-// DERIVADA ANALÍTICA (exata) de x(t), obtida com a regra da cadeia:
-//   d/dt [ A · sen(ω t) ] = A · cos(ω t) · ω
-// É usada na telemetria, na seta laranja e na velocidade relativa,
-// que decide se o pouso é válido (ver verificarPouso).
+//PRIMEIRA DERIVADA - VELOCIDADE
 function velocidadePlataforma(t) {
   return nivel.amplitude * nivel.omega * Math.cos(nivel.omega * t);
 }
 
-// =====================================================================
-// 6. NAVEGAÇÃO ENTRE AS TELAS
-// =====================================================================
+//NAVEGAÇÃO ENTRE AS TELAS
 function mostrarTela(id) {
   document.querySelectorAll('.tela').forEach(t => t.classList.remove('ativa'));
   document.getElementById(id).classList.add('ativa');
@@ -96,13 +66,9 @@ function mostrarTela(id) {
   window.scrollTo(0, 0);
 }
 
-// =====================================================================
-// 7. SELEÇÃO E INICIALIZAÇÃO DOS NÍVEIS
-// =====================================================================
+//SELEÇÃO E INICIALIZAÇÃO DOS NÍVEIS
 let nivelSelecionado = null;
-
 function abrirNiveis() {
-  // seleciona automaticamente o próximo nível ainda não concluído
   const proximo = niveis.findIndex((n, i) => nivelLiberado(i) && !concluidos[i]);
   nivelSelecionado = proximo === -1 ? 0 : proximo;
   desenharListaNiveis();
@@ -153,7 +119,6 @@ function iniciarSelecionado() {
   iniciar(nivelSelecionado);
 }
 
-// Prepara (ou reinicia) um nível: zera tempo, posição, velocidade e combustível
 function iniciar(numero) {
   clearTimeout(temporizadorResultado);
   fecharResultado();
@@ -173,11 +138,7 @@ function iniciar(numero) {
   mensagem.textContent = 'Pouse devagar na plataforma e iguale a velocidade horizontal dela!';
 }
 
-// =====================================================================
-// 8. CONTROLE DO FOGUETE (motor e combustível)
-// =====================================================================
-// Liga o motor se a seta ↑ estiver apertada e ainda houver combustível.
-// Retorna o empuxo aplicado neste instante.
+//CONTROLE DO FOGUETE (motor e combustível)
 function controlarMotor(dt) {
   motorLigado = teclas.cima && combustivel > 0;
   if (!motorLigado) return 0;
@@ -185,13 +146,9 @@ function controlarMotor(dt) {
   return EMPUXO_DO_MOTOR;
 }
 
-// =====================================================================
-// 9. MOVIMENTAÇÃO E ATUALIZAÇÃO DA FÍSICA
-// =====================================================================
-// Executada a cada quadro. dt = tempo (em segundos) desde o quadro anterior.
+//MOVIMENTAÇÃO E ATUALIZAÇÃO DA FÍSICA
 function atualizar(dt) {
   tempo += dt;
-
   const empuxo = controlarMotor(dt);
 
   // a massa diminui com o combustível, então a aceleração NÃO é constante
@@ -203,21 +160,12 @@ function atualizar(dt) {
   if (teclas.esquerda) aceleracaoX = -ACELERACAO_LATERAL;
   if (teclas.direita)  aceleracaoX = ACELERACAO_LATERAL;
 
-  // ==========================================
   // MATEMÁTICA: ACELERAÇÃO, VELOCIDADE E POSIÇÃO
-  // ==========================================
-  // Relações do Cálculo:  a(t) = v'(t)   e   v(t) = h'(t)
-  // Aqui NÃO derivamos: fazemos o caminho inverso com uma APROXIMAÇÃO NUMÉRICA
-  // (método de Euler), somando pequenas variações em cada intervalo dt:
-  //   v(t + dt) ≈ v(t) + a · dt
-  //   h(t + dt) ≈ h(t) + v · dt
-  // Isso aproxima a integração do movimento. Só é exato quando dt → 0.
-  // (Diferente da velocidade da plataforma, que é uma derivada analítica exata.)
-  velocidade += aceleracao * dt;        // vertical:   aceleração -> velocidade
-  altura += velocidade * dt;            // vertical:   velocidade -> altura
-  velocidadeX += aceleracaoX * dt;      // horizontal: aceleração -> velocidade
-  posicaoX += velocidadeX * dt;         // horizontal: velocidade -> posição
-  posicaoX = Math.max(20, Math.min(LARGURA - 20, posicaoX));   // limites da tela
+  velocidade += aceleracao * dt;
+  altura += velocidade * dt;
+  velocidadeX += aceleracaoX * dt;
+  posicaoX += velocidadeX * dt;
+  posicaoX = Math.max(20, Math.min(LARGURA - 20, posicaoX));
 
   if (altura <= 0) {
     altura = 0;
@@ -226,11 +174,8 @@ function atualizar(dt) {
   }
 }
 
-// =====================================================================
-// 10. VERIFICAÇÃO DAS CONDIÇÕES DE POUSO
-// =====================================================================
+//VERIFICAÇÃO DAS CONDIÇÕES DE POUSO
 function verificarPouso() {
-  // velocidade relativa usa a DERIVADA da plataforma: v_rel = vx_foguete − x'(t)
   const velocidadeRelativa = velocidadeX - velocidadePlataforma(tempo);
   const naPlataforma = Math.abs(posicaoX - posicaoPlataforma(tempo)) < LARGURA_PLATAFORMA / 2;
   const descidaSuave = Math.abs(velocidade) <= VELOCIDADE_MAXIMA_PARA_POUSAR;
@@ -251,11 +196,8 @@ function verificarPouso() {
   }
 }
 
-// =====================================================================
-// 11. SISTEMA DE RESULTADOS
-// =====================================================================
+//SISTEMA DE RESULTADOS
 function agendarResultado(sucesso, texto) {
-  // pequena pausa para o jogador ver o pouso antes da janela aparecer
   temporizadorResultado = setTimeout(() => mostrarResultado(sucesso, texto), 700);
 }
 
@@ -271,9 +213,7 @@ function fecharResultado() {
   document.getElementById('resultado').classList.remove('mostrar');
 }
 
-// =====================================================================
-// 12. DESENHO DO CENÁRIO E DO FOGUETE (parte 1: cenário e plataforma)
-// =====================================================================
+//DESENHO DO CENÁRIO E DO FOGUETE (parte 1: cenário e plataforma)
 const estrelasDoJogo = [];
 for (let i = 0; i < 70; i++) {
   estrelasDoJogo.push({ x: (i * 137) % LARGURA, y: (i * 71) % 330, tamanho: 1 + (i % 3) * 0.6, brilho: 0.25 + (i % 5) * 0.14 });
@@ -283,7 +223,6 @@ const crateras = [
   { x: 700, largura: 40, altura: 6 }, { x: 350, largura: 22, altura: 4 }, { x: 770, largura: 24, altura: 4 }
 ];
 
-// Desenha uma seta de velocidade: ponto inicial (x, y) e vetor (tamanhoX, tamanhoY)
 function desenharSeta(x, y, tamanhoX, tamanhoY, cor, rotulo) {
   pincel.strokeStyle = cor;
   pincel.fillStyle = cor;
@@ -300,7 +239,6 @@ function desenharSeta(x, y, tamanhoX, tamanhoY, cor, rotulo) {
 }
 
 function desenharFundoDoJogo() {
-  // estrelas
   pincel.fillStyle = '#ffffff';
   for (const estrela of estrelasDoJogo) {
     pincel.globalAlpha = estrela.brilho;
@@ -308,7 +246,6 @@ function desenharFundoDoJogo() {
   }
   pincel.globalAlpha = 1;
 
-  // chão lunar com crateras
   const degrade = pincel.createLinearGradient(0, Y_DO_CHAO, 0, ALTURA_DA_TELA);
   degrade.addColorStop(0, '#5b6879');
   degrade.addColorStop(1, '#1d2734');
@@ -328,49 +265,41 @@ function desenharFundoDoJogo() {
 }
 
 function desenharPlataforma() {
-  const xPlataforma = posicaoPlataforma(tempo);     // posição x(t)
+  const xPlataforma = posicaoPlataforma(tempo);   
   const esquerda = xPlataforma - LARGURA_PLATAFORMA / 2;
   pincel.shadowColor = '#58e6ff';
   pincel.shadowBlur = 14;
   pincel.fillStyle = '#58e6ff';
   pincel.fillRect(esquerda, Y_DO_CHAO - 6, LARGURA_PLATAFORMA, 6);
   pincel.shadowBlur = 0;
-  // luzes piscando nas pontas
   pincel.fillStyle = Math.floor(performance.now() / 400) % 2 ? '#ffb454' : '#7a5a2a';
   pincel.fillRect(esquerda + 4, Y_DO_CHAO - 10, 6, 4);
   pincel.fillRect(esquerda + LARGURA_PLATAFORMA - 10, Y_DO_CHAO - 10, 6, 4);
-  // seta laranja: comprimento proporcional à derivada x'(t)
   desenharSeta(xPlataforma, Y_DO_CHAO - 24, velocidadePlataforma(tempo) * 3, 0, '#ffb454', 'v plat.');
 }
 
-// =====================================================================
-// 12. DESENHO DO CENÁRIO E DO FOGUETE (parte 2: foguete, feito direto no Canvas)
-// =====================================================================
-// (x, y) = centro da base do foguete. O corpo vai de y - 50 (ponta) até y (base).
+//DESENHO DO CENÁRIO E DO FOGUETE (parte 2: foguete, feito direto no Canvas)
 function desenharFoguete() {
   const x = posicaoX;
-  const y = Y_DO_CHAO - altura;   // a base do foguete fica na posição "altura"
+  const y = Y_DO_CHAO - altura;
 
   desenharChama(x, y);
   desenharAletas(x, y);
   desenharBocal(x, y);
   desenharCorpo(x, y);
 
-  // seta de velocidade do foguete (verde): (vx, vy) da movimentação
   desenharSeta(x, y - 25, velocidadeX * 3, -velocidade * 3, '#6cf2a5', 'v');
 }
 
 function desenharChama(x, y) {
   if (!motorLigado || terminou) return;
-  const tamanhoChama = 20 + Math.random() * 10;   // tremulação aleatória
-  // chama externa (laranja)
+  const tamanhoChama = 20 + Math.random() * 10;
   pincel.fillStyle = '#ff6c42';
   pincel.beginPath();
   pincel.moveTo(x - 7, y + 2);
   pincel.quadraticCurveTo(x - 6, y + tamanhoChama * 0.6, x, y + tamanhoChama);
   pincel.quadraticCurveTo(x + 6, y + tamanhoChama * 0.6, x + 7, y + 2);
   pincel.fill();
-  // chama interna (amarela)
   pincel.fillStyle = '#ffe08a';
   pincel.beginPath();
   pincel.moveTo(x - 3, y + 2);
@@ -381,7 +310,7 @@ function desenharChama(x, y) {
 
 function desenharAletas(x, y) {
   pincel.fillStyle = '#ff647c';
-  for (const lado of [-1, 1]) {            // -1 = esquerda, 1 = direita
+  for (const lado of [-1, 1]) {   
     pincel.beginPath();
     pincel.moveTo(x + lado * 11, y - 20);
     pincel.quadraticCurveTo(x + lado * 22, y - 10, x + lado * 22, y);
@@ -403,7 +332,6 @@ function desenharBocal(x, y) {
 }
 
 function desenharCorpo(x, y) {
-  // contorno do corpo, com a ponta arredondada
   pincel.save();
   pincel.beginPath();
   pincel.moveTo(x, y - 50);
@@ -413,17 +341,16 @@ function desenharCorpo(x, y) {
   pincel.lineTo(x - 12, y - 10);
   pincel.quadraticCurveTo(x - 13, y - 34, x, y - 50);
   pincel.closePath();
-  pincel.clip();                            // tudo abaixo fica restrito ao corpo
-  pincel.fillStyle = '#e8f1f9';             // corpo branco
+  pincel.clip();                      
+  pincel.fillStyle = '#e8f1f9';          
   pincel.fillRect(x - 13, y - 52, 26, 54);
-  pincel.fillStyle = 'rgba(0, 0, 0, 0.1)';  // sombra do lado direito
+  pincel.fillStyle = 'rgba(0, 0, 0, 0.1)'; 
   pincel.fillRect(x + 5, y - 52, 8, 54);
-  pincel.fillStyle = '#ff647c';             // ponta vermelha
+  pincel.fillStyle = '#ff647c';           
   pincel.fillRect(x - 13, y - 52, 26, 16);
-  pincel.fillRect(x - 13, y - 5, 26, 3);    // faixa perto da base
+  pincel.fillRect(x - 13, y - 5, 26, 3);   
   pincel.restore();
 
-  // janela: aro escuro, vidro azul e pequeno brilho
   pincel.fillStyle = '#2b3a4d';
   pincel.beginPath();
   pincel.arc(x, y - 26, 6.5, 0, Math.PI * 2);
@@ -445,9 +372,7 @@ function desenhar() {
   desenharFoguete();
 }
 
-// =====================================================================
-// 13. TELEMETRIA (painel de números)
-// =====================================================================
+// TELEMETRIA (painel de números)
 function mostrarTelemetria() {
   const velocidadeRelativa = velocidadeX - velocidadePlataforma(tempo);
   document.getElementById('txtAltura').textContent = altura.toFixed(1) + ' m';
@@ -457,14 +382,11 @@ function mostrarTelemetria() {
   document.getElementById('barraCombustivel').style.width = combustivel + '%';
   document.getElementById('txtVelPlataforma').textContent = velocidadePlataforma(tempo).toFixed(2) + ' m/s';
   document.getElementById('txtVelRelativa').textContent = velocidadeRelativa.toFixed(2) + ' m/s';
-  // cores de ajuda: vermelho = rápido demais, verde = velocidades iguais
   document.getElementById('metricaVelocidade').classList.toggle('alerta', Math.abs(velocidade) > VELOCIDADE_MAXIMA_PARA_POUSAR);
   document.getElementById('metricaRelativa').classList.toggle('ok', Math.abs(velocidadeRelativa) <= DIFERENCA_MAXIMA_ENTRE_VELOCIDADES_X);
 }
 
-// =====================================================================
-// 14. LAÇO PRINCIPAL DO JOGO
-// =====================================================================
+// LAÇO PRINCIPAL DO JOGO
 let tempoAnterior = performance.now();
 
 function laco(agora) {
@@ -478,10 +400,7 @@ function laco(agora) {
   requestAnimationFrame(laco);
 }
 
-// =====================================================================
-// 15. CONTROLES DO TECLADO (só funcionam na tela do jogo)
-// ↑ motor · ← esquerda · → direita · R reiniciar
-// =====================================================================
+// CONTROLES DO TECLADO 
 function mudarTecla(evento, apertada) {
   if (!emJogo) return;
   const tecla = evento.key.toLowerCase();
@@ -495,10 +414,7 @@ window.addEventListener('keydown', e => mudarTecla(e, true));
 window.addEventListener('keyup', e => mudarTecla(e, false));
 window.addEventListener('blur', () => { teclas.cima = teclas.esquerda = teclas.direita = false; });
 
-// =====================================================================
-// 16. INICIALIZAÇÃO DO JOGO
-// =====================================================================
-// estrelas do plano de fundo da página
+//INICIALIZAÇÃO DO JOGO
 const sombrasDasEstrelas = [];
 for (let i = 0; i < 120; i++) {
   const x = Math.random() * 100, y = Math.random() * 100;
@@ -508,7 +424,6 @@ for (let i = 0; i < 120; i++) {
 }
 document.getElementById('estrelas').style.boxShadow = sombrasDasEstrelas.join(',');
 
-// ligação dos botões da página (no lugar do onclick no HTML)
 function ligarBotao(id, acao) {
   document.getElementById(id).addEventListener('click', acao);
 }
@@ -521,5 +436,5 @@ ligarBotao('botaoNiveisResultado', abrirNiveis);
 
 nivel = niveis[0];
 iniciar(0);
-abrirNiveis();   // o jogo abre direto na seleção de níveis (sem tela inicial)
+abrirNiveis();
 requestAnimationFrame(laco);
